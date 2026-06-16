@@ -98,9 +98,9 @@ providers:
 
 ## How the data is collected
 
-See [`collector/`](./collector) for the OpenTelemetry collector pipeline that
+See [`collector/`](https://github.com/palaniichukdmytro/cowork-observability/tree/main/collector) for the OpenTelemetry collector pipeline that
 ships Cowork/Claude Desktop telemetry into Loki.
 
 ## License
 
-[MIT](./LICENSE)
+[MIT](https://github.com/palaniichukdmytro/cowork-observability/blob/main/LICENSE)
