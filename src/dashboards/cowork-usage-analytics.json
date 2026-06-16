@@ -80,9 +80,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -124,9 +122,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -168,9 +164,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -212,9 +206,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -256,9 +248,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -300,9 +290,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -344,9 +332,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -388,9 +374,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -440,9 +424,7 @@
       "id": 11,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -486,9 +468,7 @@
       "id": 12,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -658,9 +638,7 @@
       "id": 21,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -701,9 +679,7 @@
       "id": 22,
       "options": {
         "legend": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -748,9 +724,7 @@
       "id": 23,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -828,9 +802,7 @@
       "options": {
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true
@@ -1087,9 +1059,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -1141,9 +1111,7 @@
         "colorMode": "value",
         "graphMode": "none",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -1267,9 +1235,7 @@
       "id": 41,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -1313,9 +1279,7 @@
       "id": 42,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "displayMode": "table",
           "placement": "bottom"
         },
@@ -1567,16 +1531,11 @@
         "legend": {
           "displayMode": "table",
           "placement": "right",
-          "values": [
-            "value",
-            "percent"
-          ]
+          "values": ["value", "percent"]
         },
         "pieType": "donut",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         },
         "tooltip": {
           "mode": "multi"
@@ -1755,9 +1714,7 @@
         "colorMode": "background",
         "graphMode": "area",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"]
         }
       },
       "targets": [
@@ -1789,18 +1746,12 @@
       },
       "id": 72,
       "options": {
-        "displayLabels": [
-          "percent",
-          "name"
-        ],
+        "displayLabels": ["percent", "name"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "value",
-            "percent"
-          ]
+          "values": ["value", "percent"]
         },
         "pieType": "donut"
       },
@@ -1993,13 +1944,7 @@
   ],
   "refresh": "5m",
   "schemaVersion": 42,
-  "tags": [
-    "cowork",
-    "claude-desktop",
-    "claude-code",
-    "opentelemetry",
-    "loki"
-  ],
+  "tags": ["cowork", "claude-desktop", "claude-code", "opentelemetry", "loki"],
   "templating": {
     "list": [
       {

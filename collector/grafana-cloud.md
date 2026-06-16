@@ -5,15 +5,15 @@ in your Cloud-hosted Loki. No self-managed collector.
 
 ## Client config (Cowork Monitoring settings)
 
-| Field | Value |
-|---|---|
-| OTLP endpoint | `https://otlp-gateway-<region>.grafana.net/otlp` |
-| OTLP protocol | `http/protobuf` |
-| OTLP headers | `Authorization=Basic <base64(instanceID:token)>` |
-| Resource attributes | `deployment.environment=prod,team=<your-team>` |
+| Field               | Value                                            |
+| ------------------- | ------------------------------------------------ |
+| OTLP endpoint       | `https://otlp-gateway-<region>.grafana.net/otlp` |
+| OTLP protocol       | `http/protobuf`                                  |
+| OTLP headers        | `Authorization=Basic <base64(instanceID:token)>` |
+| Resource attributes | `deployment.environment=prod,team=<your-team>`   |
 
 Generate the instance ID + token in the Grafana Cloud portal → your stack →
-**OpenTelemetry** tile → *Configure*.
+**OpenTelemetry** tile → _Configure_.
 
 ## Equivalent env (Claude Code CLI / managed-settings)
 

@@ -13,13 +13,7 @@ const DAYS = Number(process.env.SEED_DAYS || 5); // stay under Loki's 168h rejec
 const NOW = Date.now();
 const WINDOW_MS = DAYS * 24 * 60 * 60 * 1000;
 
-const USERS = [
-  'alice@example.com',
-  'bob@example.com',
-  'carol@example.com',
-  'dave@example.com',
-  'erin@example.com',
-];
+const USERS = ['alice@example.com', 'bob@example.com', 'carol@example.com', 'dave@example.com', 'erin@example.com'];
 const MODELS = ['claude-opus-4-8', 'claude-sonnet-4-6', 'claude-haiku-4-5'];
 const BUILTIN_TOOLS = ['Read', 'Edit', 'Write', 'Bash', 'Grep', 'Glob', 'WebFetch', 'Agent'];
 const MCP_TOOLS = [
@@ -128,16 +122,22 @@ function seedSession(svc, dayStart) {
 for (let d = 0; d < DAYS; d++) {
   const dayStart = NOW - WINDOW_MS + d * 24 * 3600 * 1000;
   const coworkSessions = rndInt(6, 12);
-  for (let s = 0; s < coworkSessions; s++) seedSession('cowork', dayStart);
+  for (let s = 0; s < coworkSessions; s++) {
+    seedSession('cowork', dayStart);
+  }
   // smaller CLI (claude-code) footprint for the source-comparison panels
   const cliSessions = rndInt(2, 5);
-  for (let s = 0; s < cliSessions; s++) seedSession('claude-code', dayStart);
+  for (let s = 0; s < cliSessions; s++) {
+    seedSession('claude-code', dayStart);
+  }
 }
 
 // Group into Loki streams, sort ascending, assign unique ns timestamps.
 const byStream = new Map();
 for (const e of events) {
-  if (!byStream.has(e.svc)) byStream.set(e.svc, []);
+  if (!byStream.has(e.svc)) {
+    byStream.set(e.svc, []);
+  }
   byStream.get(e.svc).push(e);
 }
 

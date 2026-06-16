@@ -15,10 +15,7 @@
   },
   "outputStyle": "default",
   "permissions": {
-    "ask": [
-      "Bash(git push --force:*)",
-      "Bash(docker:*)"
-    ],
+    "ask": ["Bash(git push --force:*)", "Bash(docker:*)"],
     "deny": [
       "Read(**/.env)",
       "Read(**/.env.*)",

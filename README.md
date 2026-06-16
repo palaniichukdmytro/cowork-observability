@@ -2,7 +2,7 @@
 
 Grafana dashboard for **Cowork (Claude Desktop)** usage, cost and behavioral
 analytics — derived entirely from **OpenTelemetry structured log events** stored
-in **Loki**. Cowork does not emit OTEL *metrics*; everything here is computed
+in **Loki**. Cowork does not emit OTEL _metrics_; everything here is computed
 from log events (`claude_code.api_request`, `claude_code.tool_result`,
 `claude_code.tool_decision`, `claude_code.user_prompt`).
 
@@ -20,17 +20,17 @@ bundles the dashboard. The dashboard JSON
 
 The bundled dashboard has 9 sections:
 
-| Section | What it shows |
-|---|---|
-| 📊 Overview | Total cost, active users, sessions, API requests, in/out/cache tokens, tool calls |
-| 💰 Cost Analysis | Cost over time by user / by model, cumulative cost, cost-by-user table |
-| 🔤 Token Usage | Output tokens by model, API latency by model, token types over time, cache leverage |
-| 🔧 Tool Usage | Built-in tools, MCP connector tools, tool latency, error rate, accept rate, agent latency |
-| 👥 Sessions & Activity | Prompts over time, API requests over time by user |
-| 🏆 User Scorecard | Per-user table: cost, tokens, requests, sessions, tool calls |
-| 📡 Source Comparison | CLI (`claude-code`) vs Cowork — cost, requests, active users |
-| 📋 Logs | Raw Cowork event stream |
-| 🔒 Approval Mode | Auto vs manual tool-decision breakdown (security/compliance view) |
+| Section                | What it shows                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| 📊 Overview            | Total cost, active users, sessions, API requests, in/out/cache tokens, tool calls         |
+| 💰 Cost Analysis       | Cost over time by user / by model, cumulative cost, cost-by-user table                    |
+| 🔤 Token Usage         | Output tokens by model, API latency by model, token types over time, cache leverage       |
+| 🔧 Tool Usage          | Built-in tools, MCP connector tools, tool latency, error rate, accept rate, agent latency |
+| 👥 Sessions & Activity | Prompts over time, API requests over time by user                                         |
+| 🏆 User Scorecard      | Per-user table: cost, tokens, requests, sessions, tool calls                              |
+| 📡 Source Comparison   | CLI (`claude-code`) vs Cowork — cost, requests, active users                              |
+| 📋 Logs                | Raw Cowork event stream                                                                   |
+| 🔒 Approval Mode       | Auto vs manual tool-decision breakdown (security/compliance view)                         |
 
 **Intentionally omitted:** `File Operations` and `Skills` sections from the
 original dashboard — the Cowork client does not currently emit
@@ -48,26 +48,26 @@ empty. Re-add them once/if the collector forwards those event types.
 Each log line is JSON-parsed (`| json`). Event type is the `body` field; payload
 lives in `attributes_*` fields:
 
-| Field | Meaning |
-|---|---|
-| `body` | event type: `claude_code.api_request` / `.tool_result` / `.tool_decision` / `.user_prompt` |
-| `attributes_user_email` | user identity |
-| `attributes_model` | model id |
-| `attributes_cost_usd` | request cost |
-| `attributes_input_tokens` / `_output_tokens` / `_cache_read_tokens` / `_cache_creation_tokens` | token counts |
-| `attributes_duration_ms` | request/tool latency |
-| `attributes_tool_name` / `attributes_tool_parameters` | tool calls (`mcp_tool` carries MCP name in parameters) |
-| `attributes_success` | tool success flag |
-| `attributes_decision` / `attributes_approval_type` | tool-decision outcome / manual vs automatic |
-| `attributes_session_id` | session grouping |
+| Field                                                                                          | Meaning                                                                                    |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `body`                                                                                         | event type: `claude_code.api_request` / `.tool_result` / `.tool_decision` / `.user_prompt` |
+| `attributes_user_email`                                                                        | user identity                                                                              |
+| `attributes_model`                                                                             | model id                                                                                   |
+| `attributes_cost_usd`                                                                          | request cost                                                                               |
+| `attributes_input_tokens` / `_output_tokens` / `_cache_read_tokens` / `_cache_creation_tokens` | token counts                                                                               |
+| `attributes_duration_ms`                                                                       | request/tool latency                                                                       |
+| `attributes_tool_name` / `attributes_tool_parameters`                                          | tool calls (`mcp_tool` carries MCP name in parameters)                                     |
+| `attributes_success`                                                                           | tool success flag                                                                          |
+| `attributes_decision` / `attributes_approval_type`                                             | tool-decision outcome / manual vs automatic                                                |
+| `attributes_session_id`                                                                        | session grouping                                                                           |
 
 ## Variables
 
-| Variable | Type | Default | Notes |
-|---|---|---|---|
-| `datasource` | datasource (loki) | — | pick your Loki source on import |
-| `user_email` | textbox (regex) | `.+` | type an email or regex to filter; `.+` = all |
-| `model` | textbox (regex) | `.+` | filter by model; `.+` = all |
+| Variable     | Type              | Default | Notes                                        |
+| ------------ | ----------------- | ------- | -------------------------------------------- |
+| `datasource` | datasource (loki) | —       | pick your Loki source on import              |
+| `user_email` | textbox (regex)   | `.+`    | type an email or regex to filter; `.+` = all |
+| `model`      | textbox (regex)   | `.+`    | filter by model; `.+` = all                  |
 
 ## Install
 

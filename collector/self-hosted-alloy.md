@@ -52,9 +52,9 @@ services:
     volumes:
       - ./config.alloy:/etc/alloy/config.alloy
     ports:
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-      - "12345:12345" # Alloy UI
+      - '4317:4317' # OTLP gRPC
+      - '4318:4318' # OTLP HTTP
+      - '12345:12345' # Alloy UI
 ```
 
 ## Client config (Cowork Monitoring settings / env)
