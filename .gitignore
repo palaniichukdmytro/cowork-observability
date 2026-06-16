@@ -58,3 +58,6 @@ secrets/
 
 # release artifacts
 *.zip
+
+# personal release workflow (contains employer-specific scan patterns) — keep local
+.claude/skills/release-plugin/
