@@ -55,3 +55,6 @@ ci/
 secrets/
 *credentials*
 *token*
+
+# release artifacts
+*.zip
