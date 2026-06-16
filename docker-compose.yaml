@@ -3,3 +3,14 @@ services:
     extends:
       file: .config/docker-compose-base.yaml
       service: grafana
+    depends_on:
+      - loki
+
+  # Local-only Loki for development / screenshots. Not part of the published
+  # plugin — the plugin reads whatever Loki datasource the user provides.
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: cowork-obs-loki
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml

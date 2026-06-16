@@ -1,0 +1,14 @@
+apiVersion: 1
+
+# Local-only datasource for development / screenshots. The published plugin
+# does not ship a datasource — users point the dashboard at their own Loki.
+datasources:
+  - name: Loki
+    uid: loki-dev
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: true
+    editable: true
+    jsonData:
+      maxLines: 1000
