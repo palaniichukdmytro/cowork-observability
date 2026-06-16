@@ -1,0 +1,2062 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_LOKI",
+      "label": "Loki",
+      "description": "Loki datasource holding Cowork/Claude Code OTEL log events",
+      "type": "datasource",
+      "pluginId": "loki",
+      "pluginName": "Loki"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "loki",
+      "name": "Loki",
+      "version": "1.0.0"
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "description": "Cowork (Claude Desktop) usage & cost analytics, derived entirely from OTEL structured log events in Loki (api_request, tool_result, tool_decision, user_prompt). No metrics required.",
+  "editable": true,
+  "graphTooltip": 0,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "📊 Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 500
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cost_usd [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Cost (USD)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | attributes_user_email=~\"$user_email\" [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Active Users",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(sum by (attributes_session_id) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.user_prompt\" | attributes_user_email=~\"$user_email\" [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Sessions",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "API Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "cyan",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_output_tokens [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Output Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "light-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_user_email=~\"$user_email\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Calls",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "light-blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_input_tokens [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Input Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "super-light-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cache_read_tokens [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Cache Read Tokens",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 10,
+      "title": "💰 Cost Analysis",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cost_usd [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cost Over Time by User",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_model) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cost_usd [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cost Over Time by Model",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Running total of API costs.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 30,
+            "gradientMode": "scheme"
+          },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cost_usd [$__interval]))",
+          "legendFormat": "cumulative cost",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cumulative Cost Over Time",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cumulative Cost",
+            "mode": "cumulativeTotal"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Total cost breakdown per user, sorted by spending.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "attributes_user_email"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "User"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total Cost ($)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 14,
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Total Cost ($)"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | unwrap attributes_cost_usd [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Cost by User",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 20,
+      "title": "🔤 Token Usage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_model) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_output_tokens [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Output Tokens Over Time by Model",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          },
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg by (attributes_model) (avg_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_duration_ms [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "API Latency by Model (avg ms)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "All token types over time: input, output, cache read, cache creation.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_input_tokens [$__interval]))",
+          "legendFormat": "Input",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_output_tokens [$__interval]))",
+          "legendFormat": "Output",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cache_read_tokens [$__interval]))",
+          "legendFormat": "Cache Read",
+          "queryType": "range",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" | unwrap attributes_cache_creation_tokens [$__interval]))",
+          "legendFormat": "Cache Creation",
+          "queryType": "range",
+          "refId": "D"
+        }
+      ],
+      "title": "Token Usage by Type",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Cache reuse efficiency: Cache Read / Cache Creation tokens.\n>5x = excellent, 2-5x = good, <2x = poor.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "max": 50,
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 2
+              },
+              {
+                "color": "green",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "x"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 31
+      },
+      "id": 24,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | unwrap attributes_cache_read_tokens [$__range]))",
+          "legendFormat": "cache_read",
+          "queryType": "instant",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | unwrap attributes_cache_creation_tokens [$__range]))",
+          "legendFormat": "cache_creation",
+          "queryType": "instant",
+          "refId": "B"
+        }
+      ],
+      "title": "Cache Leverage Ratio",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Cache Leverage Ratio",
+            "binary": {
+              "left": "cache_read",
+              "operator": "/",
+              "right": "cache_creation"
+            },
+            "mode": "binary",
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 30,
+      "title": "🔧 Tool Usage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 40
+      },
+      "id": 31,
+      "options": {
+        "barWidth": 0.8,
+        "orientation": "horizontal",
+        "showValue": "always",
+        "xTickLabelRotation": 0
+      },
+      "targets": [
+        {
+          "expr": "topk(10, sum by (attributes_tool_name) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_tool_name!=\"mcp_tool\" | attributes_user_email=~\"$user_email\" [$__range])))",
+          "legendFormat": "{{attributes_tool_name}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Built-in Tools",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 40
+      },
+      "id": 36,
+      "options": {
+        "barWidth": 0.8,
+        "orientation": "horizontal",
+        "showValue": "always",
+        "xTickLabelRotation": 0
+      },
+      "targets": [
+        {
+          "expr": "topk(15, sum by (mcp_tool_name) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_tool_name=\"mcp_tool\" | attributes_user_email=~\"$user_email\" | line_format \"{{.attributes_tool_parameters}}\" | json mcp_tool_name=\"mcp_tool_name\" [$__range])))",
+          "legendFormat": "{{mcp_tool_name}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "MCP Connector Tools",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 40
+      },
+      "id": 33,
+      "options": {
+        "barWidth": 0.8,
+        "orientation": "horizontal",
+        "showValue": "always"
+      },
+      "targets": [
+        {
+          "expr": "topk(15, avg by (attributes_tool_name) (avg_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_user_email=~\"$user_email\" | attributes_tool_name!=\"Agent\" | unwrap attributes_duration_ms [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Latency (excl. Agent)",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Number of failed tool calls (success=false) per interval",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "errors"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 48
+      },
+      "id": 32,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_success=\"false\" | attributes_user_email=~\"$user_email\" [$__interval]))",
+          "legendFormat": "errors",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_user_email=~\"$user_email\" [$__interval]))",
+          "legendFormat": "total",
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "Tool Error Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Percentage of tool decisions that were accepted.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 8,
+        "y": 48
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_decision=\"accept\" | attributes_user_email=~\"$user_email\" [$__range])) / sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_user_email=~\"$user_email\" [$__range])) * 100",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Accept Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Average Agent tool latency (shown separately as it dominates other tools).",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 60000
+              },
+              {
+                "color": "red",
+                "value": 180000
+              }
+            ]
+          },
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 12,
+        "y": 48
+      },
+      "id": 37,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg(avg_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_tool_name=\"Agent\" | attributes_user_email=~\"$user_email\" | unwrap attributes_duration_ms [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Agent Latency",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "attributes_user_email"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "User"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mcp_tool_name"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "MCP Tool"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Count"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 48
+      },
+      "id": 35,
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Count"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email, mcp_tool_name) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" | attributes_tool_name=\"mcp_tool\" | attributes_user_email=~\"$user_email\" | line_format \"{{.attributes_tool_parameters}}\" | json mcp_tool_name=\"mcp_tool_name\" [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "MCP Usage by User",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 40,
+      "title": "👥 Sessions & Activity",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 57
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.user_prompt\" | attributes_user_email=~\"$user_email\" [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Prompts Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 57
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | attributes_user_email=~\"$user_email\" | attributes_model=~\"$model\" [$__interval]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "API Requests Over Time by User",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 65
+      },
+      "id": 44,
+      "title": "🏆 User Scorecard",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Per-user breakdown: cost, tokens, requests, sessions, tool calls.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "attributes_user_email"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "User"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #cost"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Cost ($)"
+              },
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #tokens"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Output Tokens"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #requests"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "API Requests"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #sessions"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Sessions"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #tools"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Tool Calls"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 66
+      },
+      "id": 45,
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Cost ($)"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | unwrap attributes_cost_usd [$__range]))",
+          "legendFormat": "{{attributes_user_email}}",
+          "queryType": "instant",
+          "refId": "cost"
+        },
+        {
+          "expr": "sum by (attributes_user_email) (sum_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" | unwrap attributes_output_tokens [$__range]))",
+          "legendFormat": "{{attributes_user_email}}",
+          "queryType": "instant",
+          "refId": "tokens"
+        },
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.api_request\" [$__range]))",
+          "legendFormat": "{{attributes_user_email}}",
+          "queryType": "instant",
+          "refId": "requests"
+        },
+        {
+          "expr": "count by (attributes_user_email) (sum by (attributes_user_email, attributes_session_id) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.user_prompt\" [$__range])))",
+          "legendFormat": "{{attributes_user_email}}",
+          "queryType": "instant",
+          "refId": "sessions"
+        },
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_result\" [$__range]))",
+          "legendFormat": "{{attributes_user_email}}",
+          "queryType": "instant",
+          "refId": "tools"
+        }
+      ],
+      "title": "User Efficiency Scorecard",
+      "transformations": [
+        {
+          "id": "merge"
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 76
+      },
+      "id": 50,
+      "title": "📡 Source Comparison — CLI vs Cowork",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 77
+      },
+      "id": 51,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (service_name) (sum_over_time({service_name=~\"cowork|claude-code\"} | json | body=\"claude_code.api_request\" | unwrap attributes_cost_usd [$__range]))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Cost: CLI vs Cowork",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 77
+      },
+      "id": 52,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "count by (service_name) (sum by (service_name, attributes_user_email) (count_over_time({service_name=~\"cowork|claude-code\"} | json [${__range}])))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "API Requests: CLI vs Cowork Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 77
+      },
+      "id": 53,
+      "options": {
+        "barWidth": 0.5,
+        "orientation": "vertical",
+        "showValue": "always"
+      },
+      "targets": [
+        {
+          "expr": "count by (service_name) (sum by (service_name, attributes_user_email) (count_over_time({service_name=~\"cowork|claude-code\"} | json [$__range])))",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Active Users by Source",
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 85
+      },
+      "id": 60,
+      "title": "📋 Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 61,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "expr": "{service_name=\"cowork\"} | json | attributes_user_email=~\"$user_email\" | line_format \"{{.body}} | user={{.attributes_user_email}} | model={{.attributes_model}} | cost={{.attributes_cost_usd}} | tool={{.attributes_tool_name}} | duration={{.attributes_duration_ms}}ms\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Cowork Events",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 97
+      },
+      "id": 70,
+      "title": "🔒 Approval Mode — Manual vs Auto",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "% of tool decisions that were auto-approved without human review. High % = team trusts auto-mode. Low % = team reviews manually.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 98
+      },
+      "id": 71,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_approval_type=\"automatic\" | attributes_user_email=~\"$user_email\" [$__range])) / sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_user_email=~\"$user_email\" [$__range])) * 100",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Auto-Approval Rate %",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Manual = user explicitly approved/rejected. Automatic = pre-configured permissions or auto-mode.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 6,
+        "y": 98
+      },
+      "id": 72,
+      "options": {
+        "displayLabels": [
+          "percent",
+          "name"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut"
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_approval_type) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_user_email=~\"$user_email\" [$__range]))",
+          "legendFormat": "{{attributes_approval_type}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Manual vs Auto Breakdown",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          },
+          "unit": "none"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 98
+      },
+      "id": 73,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_approval_type=\"automatic\" | attributes_user_email=~\"$user_email\" [$__interval]))",
+          "legendFormat": "automatic",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_approval_type=\"manual\" | attributes_user_email=~\"$user_email\" [$__interval]))",
+          "legendFormat": "manual",
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "Auto vs Manual Approvals Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "Security/compliance view: which users run mostly in auto-mode vs reviewing every action.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "attributes_user_email"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "User"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #automatic"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Automatic"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 50
+                    },
+                    {
+                      "color": "red",
+                      "value": 200
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #manual"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Manual"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 107
+      },
+      "id": 74,
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Automatic"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_approval_type=\"automatic\" [$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "automatic"
+        },
+        {
+          "expr": "sum by (attributes_user_email) (count_over_time({service_name=\"cowork\"} | json | body=\"claude_code.tool_decision\" | attributes_approval_type=\"manual\" [$__range]))",
+          "format": "table",
+          "instant": true,
+          "refId": "manual"
+        }
+      ],
+      "title": "Approval Mode by User",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value #automatic": "Automatic",
+              "Value #manual": "Manual"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 42,
+  "tags": [
+    "cowork",
+    "claude-desktop",
+    "claude-code",
+    "opentelemetry",
+    "loki"
+  ],
+  "templating": {
+    "list": [
+      {
+        "type": "datasource",
+        "name": "datasource",
+        "label": "Loki datasource",
+        "query": "loki",
+        "current": {},
+        "hide": 0,
+        "refresh": 1,
+        "regex": ""
+      },
+      {
+        "type": "textbox",
+        "name": "user_email",
+        "label": "User (regex)",
+        "query": ".+",
+        "current": {
+          "text": ".+",
+          "value": ".+"
+        },
+        "options": [
+          {
+            "text": ".+",
+            "value": ".+",
+            "selected": true
+          }
+        ],
+        "hide": 0
+      },
+      {
+        "type": "textbox",
+        "name": "model",
+        "label": "Model (regex)",
+        "query": ".+",
+        "current": {
+          "text": ".+",
+          "value": ".+"
+        },
+        "options": [
+          {
+            "text": ".+",
+            "value": ".+",
+            "selected": true
+          }
+        ],
+        "hide": 0
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Cowork (Claude Desktop) — Usage & Cost Analytics",
+  "uid": "cowork-usage-analytics",
+  "version": 1,
+  "weekStart": ""
+}

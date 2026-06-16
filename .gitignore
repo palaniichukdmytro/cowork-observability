@@ -1,0 +1,13 @@
+# secrets / local env — never commit
+.env
+*.local
+*.secret
+secrets/
+*credentials*
+*token*
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
