@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'palaniychuk-coworkobservability-app'
+    container_name: 'palanikus-coworkobservability-app'
 
     build:
       context: .
@@ -13,13 +13,13 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ../dist:/var/lib/grafana/plugins/palaniychuk-coworkobservability-app
+      - ../dist:/var/lib/grafana/plugins/palanikus-coworkobservability-app
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/palaniychuk-coworkobservability-app
+      - ..:/root/palanikus-coworkobservability-app
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.palaniychuk-coworkobservability-app:debug
+      GF_LOG_FILTERS: plugin.palanikus-coworkobservability-app:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: palaniychuk-coworkobservability-app
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: palanikus-coworkobservability-app

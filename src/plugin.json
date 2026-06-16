@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Cowork Observability",
-  "id": "palaniychuk-coworkobservability-app",
+  "id": "palanikus-coworkobservability-app",
   "info": {
     "keywords": ["claude", "claude-code", "cowork", "opentelemetry", "otel", "loki", "cost", "observability", "ai"],
     "description": "Usage and cost analytics for Cowork (Claude Desktop) and Claude Code, built from OpenTelemetry log events in Loki. Not affiliated with Anthropic.",

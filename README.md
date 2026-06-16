@@ -12,7 +12,7 @@ from log events (`claude_code.api_request`, `claude_code.tool_result`,
 > Not affiliated with Anthropic. "Claude", "Claude Code" and "Cowork" are
 > referenced descriptively.
 
-Packaged as a **Grafana app plugin** (`palaniychuk-coworkobservability-app`) that
+Packaged as a **Grafana app plugin** (`palanikus-coworkobservability-app`) that
 bundles the dashboard. The dashboard JSON
 (`src/dashboards/cowork-usage-analytics.json`) also works standalone via import.
 
