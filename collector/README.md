@@ -1,28 +1,23 @@
-# Collector
+# Collector / ingestion
 
-This directory documents how Cowork (Claude Desktop) / Claude Code telemetry is
-collected and shipped into Loki as structured log events.
-
-## Pipeline (high level)
+The dashboard is **datasource-agnostic** — it reads whatever Loki you point the
+`datasource` variable at. How Cowork/Claude telemetry *gets into* Loki has two
+supported profiles. Pick one; the dashboard is identical for both.
 
 ```
-Claude Desktop (Cowork) ──OTLP──▶ OpenTelemetry Collector ──▶ Loki
-        │                                  │
-        └─ OTEL log events                 └─ relabels service_name, routes to Loki
-           (claude_code.api_request, …)       under {service_name="cowork"}
+Claude Desktop (Cowork) ──OTLP──▶  [ ingestion ]  ──▶ Loki ──▶ this dashboard
+   emits OTEL log events                                   {service_name="cowork"}
+   (claude_code.api_request, .tool_result, .tool_decision, .user_prompt)
 ```
 
-Cowork emits **log events** (not metrics). The collector receives them over OTLP,
-labels the stream `service_name="cowork"` (and `service_name="claude-code"` for the
-CLI), and forwards to Loki, where the dashboard parses them with `| json`.
+| Profile | When | Doc |
+|---|---|---|
+| **A — Grafana Cloud** | you use Grafana Cloud's hosted Loki/OTLP gateway | [`grafana-cloud.md`](./grafana-cloud.md) |
+| **B — Self-hosted (Alloy/OTel Collector)** | you run your own collector → self-hosted Loki | [`self-hosted-alloy.md`](./self-hosted-alloy.md) |
 
-## TODO — add the real config
+The Cowork client is pointed at the collector via its **Monitoring settings**
+(OTLP endpoint / protocol / headers) — see
+[`managed-settings.example.json`](./managed-settings.example.json) for the
+managed-settings shape used to roll this out across a team.
 
-Drop the actual collector config here, e.g. `otel-collector-config.yaml`, with:
-
-- the **receiver** (OTLP grpc/http) Cowork points at,
-- any **processors** (attributes / resource relabeling that sets `service_name`),
-- the **Loki exporter** (endpoint + labels).
-
-> Strip endpoints, tokens, tenant IDs and any internal hostnames before committing
-> — keep this config as a redacted template.
+> All endpoints/tokens below are placeholders — replace with your own.
