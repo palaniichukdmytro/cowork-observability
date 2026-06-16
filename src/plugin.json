@@ -13,7 +13,20 @@
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "screenshots": [],
+    "screenshots": [
+      {
+        "name": "Overview & cost analysis",
+        "path": "img/screenshot-overview.png"
+      },
+      {
+        "name": "Tool usage & sessions",
+        "path": "img/screenshot-tools.png"
+      },
+      {
+        "name": "CLI vs Cowork comparison & approval mode",
+        "path": "img/screenshot-source-approval.png"
+      }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
