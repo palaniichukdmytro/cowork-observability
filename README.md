@@ -16,6 +16,8 @@ Packaged as a **Grafana app plugin** (`palanikus-coworkobservability-app`) that
 bundles the dashboard. The dashboard JSON
 (`src/dashboards/cowork-usage-analytics.json`) also works standalone via import.
 
+![Cowork Observability — overview & cost analysis](https://raw.githubusercontent.com/palaniichukdmytro/cowork-observability/main/src/img/screenshot-overview.png)
+
 ## What's inside
 
 The bundled dashboard has 9 sections:
