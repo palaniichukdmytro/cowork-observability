@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.0.1 (Unreleased)
+## 1.0.2 (Unreleased)
 
-- Add a sponsorship link (`info.links` → `sponsor`) and a repository Sponsor button (`.github/FUNDING.yml`).
-- Release builds now produce a verifiable build-provenance attestation.
+- First release published via the CI release workflow (attested, plugin archive attached).
+- Sponsorship link (`info.links` → `sponsor`) + repository Sponsor button (`.github/FUNDING.yml`).
+- Release builds produce a verifiable build-provenance attestation.
 
 ## 1.0.0
 
