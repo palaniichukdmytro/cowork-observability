@@ -32,8 +32,8 @@ Mechanical multi-step flow — run on **Sonnet**. No extended thinking needed.
    actions** in the browser.
 3. **Plugin id prefix must equal the grafana.com org slug** (`palanikus`). Don't
    change `id` in `src/plugin.json` without changing the slug too.
-4. **Public repo — no PII / internal infra.** Run the leak scan (Step 5) every
-   time; never commit real emails, tokens, IPs, or internal endpoints.
+4. **Public repo — no PII / internal infra.** Never commit real emails, tokens,
+   IPs, or internal endpoints.
 5. Commits/pushes use the **personal** identity (repo-local `user.email`,
    `core.sshCommand` → `~/.ssh/personal`, `commit.gpgsign false`). Verify, never
    commit as the work account.
@@ -87,19 +87,9 @@ plugincheck2 /tmp/rel/$PID.zip 2>&1 | grep -E '^(error|warning|recommendation):'
 ```
 There must be **0 `error:` lines**. Expected leftovers: `unsigned` (cleared by
 Grafana at review) and possibly recommendations. This local zip is only a smoke
-test — the *real* artifact is built by CI in Step 7.
+test — the *real* artifact is built by CI in Step 6.
 
-### 5. Leak scan (public repo safety)
-Concrete employer/infra patterns live in a **local, gitignored** file
-(`leak-patterns.local`) so this public-facing skill never enumerates them:
-```bash
-git grep -nE -f .claude/skills/release-plugin/leak-patterns.local -- . ':!package-lock.json' || echo "clean"
-```
-Any hit → stop and redact before continuing. Keep `leak-patterns.local` current
-(internal IPs, internal hostnames, ticket prefixes, work email domains, token
-prefixes); it is never committed.
-
-### 6. Commit + tag (this triggers the release workflow)
+### 5. Commit + tag (this triggers the release workflow)
 ```bash
 git add -A
 git commit -m "Release vX.Y.Z: <summary>
@@ -110,7 +100,7 @@ git tag -a vX.Y.Z -m "vX.Y.Z — <summary>"
 git push origin vX.Y.Z     # on: push tags 'v*' -> .github/workflows/release.yml
 ```
 
-### 7. Wait for the attested release workflow
+### 6. Wait for the attested release workflow
 ```bash
 RUN=$(gh api "repos/palaniichukdmytro/cowork-observability/actions/workflows/release.yml/runs?per_page=1" -q '.workflow_runs[0].id')
 # poll every 20s until completed; expect conclusion=success
@@ -120,7 +110,7 @@ The `grafana/plugin-actions/build-plugin` step builds, packages
 `<PID>-X.Y.Z.zip` + `.sha1`, runs `actions/attest-build-provenance`, and creates
 a **draft** release with those two assets attached.
 
-### 8. Tell the user to publish the draft (manual)
+### 7. Tell the user to publish the draft (manual)
 The draft is invisible to `gh` here, so instruct the user:
 1. Open https://github.com/palaniichukdmytro/cowork-observability/releases
 2. Find the **`Draft`** entry for `vX.Y.Z` (auto-created by Actions; its notes
@@ -128,7 +118,7 @@ The draft is invisible to `gh` here, so instruct the user:
 3. Confirm **Assets** has exactly: `<PID>-X.Y.Z.zip` and `<PID>-X.Y.Z.zip.sha1`.
 4. Edit → **Publish release**. Do **NOT** click "Draft a new release".
 
-### 9. Verify the published assets (after they publish)
+### 8. Verify the published assets (after they publish)
 ```bash
 gh api repos/palaniichukdmytro/cowork-observability/releases/tags/vX.Y.Z -q '.draft, [.assets[].name]'
 for f in <PID>-X.Y.Z.zip <PID>-X.Y.Z.zip.sha1; do
@@ -138,7 +128,7 @@ done   # both must be 200
 curl -sL ".../<PID>-X.Y.Z.zip" -o /tmp/v.zip && gh attestation verify /tmp/v.zip --repo palaniichukdmytro/cowork-observability
 ```
 
-### 10. Print the grafana.com submission values
+### 9. Print the grafana.com submission values
 Give the user, for **My Plugins → update submission**:
 | Field | Value |
 |---|---|
