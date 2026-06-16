@@ -3,9 +3,4 @@ apiVersion: 1
 apps:
   - type: 'palaniychuk-coworkobservability-app'
     org_id: 1
-    org_name: 'palaniychuk'
     disabled: false
-    jsonData:
-      apiUrl: http://default-url.com
-    secureJsonData:
-      apiKey: secret-key
