@@ -1,0 +1,10 @@
+# Sponsor button configuration for this repository.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+# Once this file is on the default branch, GitHub shows a "Sponsor" button on the repo automatically.
+
+# GitHub username (this key takes a username, not a URL).
+github: palaniichukdmytro
+
+# Buy Me a Coffee username only (NOT a URL). Native key, no `custom:` workaround needed.
+# Public page: https://buymeacoffee.com/palanikus
+buy_me_a_coffee: palanikus

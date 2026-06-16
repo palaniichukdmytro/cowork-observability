@@ -28,7 +28,17 @@
       }
     ],
     "version": "%VERSION%",
-    "updated": "%TODAY%"
+    "updated": "%TODAY%",
+    "links": [
+      {
+        "name": "documentation",
+        "url": "https://github.com/palaniichukdmytro/cowork-observability"
+      },
+      {
+        "name": "sponsor",
+        "url": "https://buymeacoffee.com/palanikus"
+      }
+    ]
   },
   "includes": [
     {
