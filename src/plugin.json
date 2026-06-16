@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "Cowork Observability",
+  "id": "palaniychuk-coworkobservability-app",
+  "info": {
+    "keywords": ["claude", "claude-code", "cowork", "opentelemetry", "otel", "loki", "cost", "observability", "ai"],
+    "description": "Usage and cost analytics for Cowork (Claude Desktop) and Claude Code, built from OpenTelemetry log events in Loki. Not affiliated with Anthropic.",
+    "author": {
+      "name": "Palaniychuk"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Page One",
+      "path": "/a/%PLUGIN_ID%/one",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Page Two",
+      "path": "/a/%PLUGIN_ID%/two",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Page Three",
+      "path": "/a/%PLUGIN_ID%/three",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Page Four",
+      "path": "/a/%PLUGIN_ID%/four",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "icon": "cog",
+      "name": "Configuration",
+      "path": "/plugins/%PLUGIN_ID%",
+      "role": "Admin",
+      "addToNav": true
+    },
+    {
+      "type": "dashboard",
+      "name": "Cowork — Usage & Cost Analytics",
+      "path": "dashboards/cowork-usage-analytics.json",
+      "addToNav": true
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=12.3.0",
+    "plugins": []
+  }
+}

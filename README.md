@@ -8,10 +8,17 @@ from log events (`claude_code.api_request`, `claude_code.tool_result`,
 
 > This repo ships a **clean, reusable template**: no hardcoded users, datasources
 > or org-specific values. All identifying values are parameterized.
+>
+> Not affiliated with Anthropic. "Claude", "Claude Code" and "Cowork" are
+> referenced descriptively.
+
+Packaged as a **Grafana app plugin** (`palaniychuk-coworkobservability-app`) that
+bundles the dashboard. The dashboard JSON
+(`src/dashboards/cowork-usage-analytics.json`) also works standalone via import.
 
 ## What's inside
 
-`dashboards/cowork-usage-analytics.json` — a single dashboard with 9 sections:
+The bundled dashboard has 9 sections:
 
 | Section | What it shows |
 |---|---|
@@ -62,10 +69,20 @@ lives in `attributes_*` fields:
 | `user_email` | textbox (regex) | `.+` | type an email or regex to filter; `.+` = all |
 | `model` | textbox (regex) | `.+` | filter by model; `.+` = all |
 
-## Import
+## Install
 
-**UI:** Dashboards → New → Import → upload
-`dashboards/cowork-usage-analytics.json` → select your Loki datasource.
+**As a Grafana app plugin** (Grafana 12.3+, ships the dashboard):
+
+```bash
+npm install
+npm run build      # bundles plugin + dashboard into dist/
+npm run server     # local Grafana with the plugin (docker)
+```
+
+Then enable the app in Grafana → Administration → Plugins.
+
+**Standalone dashboard** (Grafana 11+): Dashboards → New → Import → upload
+`src/dashboards/cowork-usage-analytics.json` → select your Loki datasource.
 
 **Provisioning:** drop the JSON into a provisioning path, e.g.
 
